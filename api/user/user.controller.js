@@ -19,7 +19,32 @@ async function getUserByIdHandler(req, res) {
   }
 }
 
+async function loginUserHandler(req, res) {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        message: 'User not found',
+      });
+    }
+    const isMatch = await user.comparePassword(password);
+    // console.log('isMatch', isMatch);
+
+    if (!isMatch) {
+      return res.status(400).json({
+        message: 'Invalid Password',
+      });
+    }
+
+    return res.status(200).json(user.profile);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+}
+
 module.exports = {
   createUserHandler,
   getUserByIdHandler,
+  loginUserHandler,
 };
