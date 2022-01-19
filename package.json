@@ -1,5 +1,5 @@
 {
-  "name": "top-v17-backend",
+  "name": "top-v19-backend",
   "version": "1.0.0",
   "description": "Backend server",
   "main": "index.js",
@@ -25,6 +25,6 @@
     "node",
     "mongodb"
   ],
-  "author": "Cristian Moreno <cristian.moreno@makeitreal.camp>",
+  "author": "Leonel Oliveros<leonel.oliveros@makeitreal.camp>",
   "license": "MIT"
 }
