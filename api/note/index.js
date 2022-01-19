@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { isAuthenticated } = require('../../auth/auth.services');
 
 const {
   createNoteHandler,
@@ -12,7 +13,7 @@ const {
 const router = Router();
 
 router.get('/', getAllNotesHandler);
-router.post('/', createNoteHandler);
+router.post('/', isAuthenticated, createNoteHandler);
 router.get('/:id', getNoteByIdHandler);
 router.get('/user/:userId', getNoteByUserHandler);
 router.delete('/:id', updateNoteHandler);
