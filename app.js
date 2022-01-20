@@ -13,6 +13,7 @@ const PORT = process.env.PORT;
 // Start server
 app.listen(PORT, () => {
   // connect to database
+
   connectDB();
 
   // Routes
