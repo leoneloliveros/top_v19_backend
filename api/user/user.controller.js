@@ -45,6 +45,8 @@ async function loginUserHandler(req, res) {
   }
 }
 
+// create user
+
 module.exports = {
   createUserHandler,
   getUserByIdHandler,
