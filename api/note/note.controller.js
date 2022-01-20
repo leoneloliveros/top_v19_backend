@@ -32,8 +32,15 @@ async function getNoteByIdHandler(req, res) {
 }
 
 async function createNoteHandler(req, res) {
+  console.log('user', req.user);
+  const { user } = req; // const user = req.user
+
   try {
-    const note = await createNote(req.body);
+    const newNote = {
+      ...req.body,
+      userId: user._id,
+    };
+    const note = await createNote(newNote);
     return res.status(201).json(note);
   } catch (error) {
     return res.status(500).json({ error: error.message });

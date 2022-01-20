@@ -1,4 +1,5 @@
 const User = require('./user.model');
+const { signToken } = require('../../auth/auth.service');
 
 async function createUserHandler(req, res) {
   try {
@@ -37,11 +38,14 @@ async function loginUserHandler(req, res) {
       });
     }
 
-    return res.status(200).json(user.profile);
+    const token = signToken(user.profile);
+    return res.status(200).json({ token });
   } catch (err) {
     res.status(400).json(err);
   }
 }
+
+// create user
 
 module.exports = {
   createUserHandler,
