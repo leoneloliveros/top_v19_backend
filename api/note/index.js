@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { isAuthenticated } = require('../../auth/auth.services');
+const { isAuthenticated, hasRole } = require('../../auth/auth.service');
 
 const {
   createNoteHandler,
@@ -13,8 +13,9 @@ const {
 const router = Router();
 
 router.get('/', getAllNotesHandler);
-router.post('/', isAuthenticated, createNoteHandler);
-router.get('/:id', getNoteByIdHandler);
+router.post('/', hasRole(['user', 'admin', 'company']), createNoteHandler);
+
+router.get('/:id', isAuthenticated, getNoteByIdHandler);
 router.get('/user/:userId', getNoteByUserHandler);
 router.delete('/:id', updateNoteHandler);
 router.patch('/:id', deleteNoteHandler);

@@ -1,29 +1,11 @@
-const User = require('./user.model');
-const { signToken } = require('../../auth/auth.service');
-
-async function createUserHandler(req, res) {
-  try {
-    const user = await User.create(req.body);
-    res.status(201).json(user);
-  } catch (err) {
-    res.status(400).json(err);
-  }
-}
-
-async function getUserByIdHandler(req, res) {
-  const { id } = req.params;
-  try {
-    const user = await User.findById(id);
-    res.status(201).json(user);
-  } catch (err) {
-    res.status(400).json(err);
-  }
-}
+const { createUserHandler } = require('../../api/user/user.controller');
+const { getUserByEmail } = require('../../api/user/user.service');
+const { signToken } = require('../auth.service');
 
 async function loginUserHandler(req, res) {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const user = await getUserByEmail(email);
     if (!user) {
       return res.status(400).json({
         message: 'User not found',
@@ -45,8 +27,15 @@ async function loginUserHandler(req, res) {
   }
 }
 
+async function forgotPassword() {}
+
+async function singUpUser() {
+  // primero crea el usuario
+  //createUserHandler(req.body);
+  // Correo de invitacion al usuario para que confirme su correo
+}
+
 module.exports = {
-  createUserHandler,
-  getUserByIdHandler,
   loginUserHandler,
+  forgotPassword,
 };
