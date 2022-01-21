@@ -1,9 +1,16 @@
 const User = require('./user.model');
 const { signToken } = require('../../auth/auth.service');
+const { uploadSingleHandler } = require('../upload/upload.controller');
 
 async function createUserHandler(req, res) {
+  const { cloudinaryImage } = req;
   try {
-    const user = await User.create(req.body);
+    const user = await User.create({
+      ...req.body,
+      imageUrl: cloudinaryImage.url,
+    });
+
+    // cloudinary
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json(err);
