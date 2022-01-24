@@ -1,13 +1,11 @@
-'use strict';
+require('dotenv').config();
 const nodemailer = require('nodemailer');
 const sgMail = require('@sendgrid/mail');
 
 const { templateCreateAccount } = require('./template.js');
 
 async function sendEmail(data) {
-  sgMail.setApiKey(
-    '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',
-  );
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
     to: 'leoneloliveros.co@gmail.com', // Change to your recipient
     from: 'leonel.oliveros@makeitreal.camp', // Change to your verified sender
@@ -43,8 +41,8 @@ async function sendEmailNodeMailer(user) {
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
-      user: 'leonel.oliveros@makeitreal.camp', // generated ethereal user
-      pass: 'xlzmwwstoikafpor', // generated ethereal password
+      user: process.env.EMAIL_USER, // generated ethereal user
+      pass: process.env.EMAIL_PASS, // generated ethereal password
     },
   });
 
