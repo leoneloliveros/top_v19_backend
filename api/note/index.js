@@ -10,14 +10,33 @@ const {
   getNoteByUserHandler,
 } = require('./note.controller');
 
+const { PayloadSchema, ParamsSchema } = require('./note.schema');
+
+const validateRequest = require('../../middleware/validateRequest');
+
 const router = Router();
 
 router.get('/', getAllNotesHandler);
-router.post('/', hasRole(['user', 'admin', 'company']), createNoteHandler);
+router.post(
+  '/',
+  validateRequest(PayloadSchema, 'body'),
+  hasRole(['user', 'admin', 'company']),
+  createNoteHandler,
+);
 
-router.get('/:id', isAuthenticated, getNoteByIdHandler);
+router.get(
+  '/:id',
+  validateRequest(ParamsSchema, 'params'),
+  isAuthenticated,
+  getNoteByIdHandler,
+);
 router.get('/user/:userId', getNoteByUserHandler);
-router.delete('/:id', updateNoteHandler);
-router.patch('/:id', deleteNoteHandler);
+router.delete('/:id', deleteNoteHandler);
+router.patch(
+  '/:id',
+  validateRequest(ParamsSchema, 'params'),
+  validateRequest(PayloadSchema, 'body'),
+  updateNoteHandler,
+);
 
 module.exports = router;
