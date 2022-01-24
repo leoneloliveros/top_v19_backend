@@ -1,0 +1,86 @@
+'use strict';
+const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
+
+const { templateCreateAccount } = require('./template.js');
+
+async function sendEmail(data) {
+  sgMail.setApiKey(
+    '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',
+  );
+  const msg = {
+    to: 'leoneloliveros.co@gmail.com', // Change to your recipient
+    from: 'leonel.oliveros@makeitreal.camp', // Change to your verified sender
+    subject: data.subject,
+    template_id: data.template_id,
+    dynamic_template_data: data.dynamic_template_data,
+  };
+
+  // sgMail
+  //   .send(msg)
+  //   .then((response) => {
+  //     console.log(response[0].statusCode);
+  //     console.log(response[0].headers);
+  //   })
+  //   .catch((error) => {
+  //     console.error(error);
+  //   });
+
+  try {
+    const response = await sgMail.send(msg);
+    console.log(response[0].statusCode);
+    console.log(response[0].headers);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// async..await is not allowed in global scope, must use a wrapper
+async function sendEmailNodeMailer(user) {
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: 'leonel.oliveros@makeitreal.camp', // generated ethereal user
+      pass: 'xlzmwwstoikafpor', // generated ethereal password
+    },
+  });
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: '"Leonel Oliveros 👻" <leonel.oliveros@makeitreal.camp>', // sender address
+    to: 'francomelgar4@gmail.com, apuello1025@gmail.com, leoneloliveros.co@gmail.com', // list of receivers
+    subject: templateCreateAccount(user).subject, // Subject line
+    text: 'Hello world? How are you bye bye', // plain text body
+    html: templateCreateAccount(user).html, // html body
+    attachments: [
+      {
+        // file on disk as an attachment
+        filename: 'cine.pdf',
+        path: './cine.pdf', // stream this file
+      },
+    ],
+  });
+  console.log('Message sent: %s', info.messageId);
+  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+  // Preview only available when sending through an Ethereal account
+  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+}
+
+// main({ email: 'leoneloliveros.co@gmail.com', firstName: 'Leonel' }).catch(
+//   console.error,
+// );
+
+sendEmail({
+  subject: 'Sending with SendGrid is Fun',
+  template_id: 'd-28df7541170049c8ae1fef567352c5ef',
+  dynamic_template_data: {
+    firstName: 'Leonel',
+  },
+});
+
+module.exports = { sendEmail, sendEmailNodeMailer };

@@ -1,9 +1,24 @@
 const User = require('./user.model');
 const { signToken } = require('../../auth/auth.service');
+const { main, sendEmail } = require('../../utils/email');
+const { urlencoded } = require('express');
 
 async function createUserHandler(req, res) {
   try {
     const user = await User.create(req.body);
+
+    // primero creamos el pdf ./temp
+    main(req.body);
+    sendEmail({ template_id: '', dynamic_template_data: req.body });
+    // Eliminamos el pdf.
+
+    //opcion 2
+    //crea un ruta para pdf
+    // servidor remoto.
+    // url y filename
+    User.update(url);
+
+    //enviamos el correo
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json(err);
