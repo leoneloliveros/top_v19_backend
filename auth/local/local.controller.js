@@ -1,5 +1,5 @@
 const { createUserHandler } = require('../../api/user/user.controller');
-const { getUserByEmail } = require('../../api/user/user.service');
+const { getUserByEmail, findOneUser } = require('../../api/user/user.service');
 const { signToken } = require('../auth.service');
 
 async function loginUserHandler(req, res) {
@@ -35,7 +35,44 @@ async function singUpUser() {
   // Correo de invitacion al usuario para que confirme su correo
 }
 
+async function verifyAccount(req, res, next) {
+  const { hash } = req.body;
+  try {
+    const user = await findOneUser({ passwordResetToken: hash });
+    if (!user) {
+      return res.status(404).json({
+        message: 'Invalid token',
+      });
+    }
+
+    if (Date.now() > user.passwordResetExpires) {
+      // borrar el usuario
+      // generar un nuevo hash y enviar un nuevo correo
+      return res.status(404).json({
+        message: 'Token expired',
+      });
+    }
+
+    user.active = true;
+    user.passwordResetToken = null;
+    user.passwordResetExpires = null;
+
+    await user.save(next);
+    const token = signToken(user.profile);
+
+    return res.status(200).json({
+      message: 'Account verified!!!!',
+      token,
+      user,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json(err);
+  }
+}
+
 module.exports = {
   loginUserHandler,
   forgotPassword,
+  verifyAccount,
 };

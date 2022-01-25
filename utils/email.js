@@ -7,8 +7,8 @@ const { templateCreateAccount } = require('./template.js');
 async function sendEmail(data) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
-    to: 'leoneloliveros.co@gmail.com', // Change to your recipient
-    from: 'leonel.oliveros@makeitreal.camp', // Change to your verified sender
+    to: data.to, // Change to your recipient
+    from: 'leoneloliveros.co@gmail.com', // Change to your verified sender
     subject: data.subject,
     template_id: data.template_id,
     dynamic_template_data: data.dynamic_template_data,
@@ -26,6 +26,7 @@ async function sendEmail(data) {
 
   try {
     const response = await sgMail.send(msg);
+    console.log('envio correo');
     console.log(response[0].statusCode);
     console.log(response[0].headers);
   } catch (err) {
@@ -73,12 +74,13 @@ async function sendEmailNodeMailer(user) {
 //   console.error,
 // );
 
-sendEmail({
-  subject: 'Sending with SendGrid is Fun',
-  template_id: 'd-28df7541170049c8ae1fef567352c5ef',
-  dynamic_template_data: {
-    firstName: 'Leonel',
-  },
-});
+// sendEmail({
+//   to: 'leoneloliveros.co@gmail.com',
+//   subject: 'Sending with SendGrid is Fun',
+//   template_id: 'd-7f1ed07a54f24fc1aa0cec826b1aa79b',
+//   dynamic_template_data: {
+//     firstName: 'Leonel',
+//   },
+// });
 
 module.exports = { sendEmail, sendEmailNodeMailer };

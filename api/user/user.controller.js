@@ -2,23 +2,34 @@ const User = require('./user.model');
 const { signToken } = require('../../auth/auth.service');
 const { main, sendEmail } = require('../../utils/email');
 const { urlencoded } = require('express');
+const crypto = require('crypto');
 
 async function createUserHandler(req, res) {
+  console.log('entro aqui');
+  const newUser = req.body;
   try {
-    const user = await User.create(req.body);
+    const hash = crypto
+      .createHash('sha256')
+      .update(newUser.email)
+      .digest('hex');
 
-    // primero creamos el pdf ./temp
-    main(req.body);
-    sendEmail({ template_id: '', dynamic_template_data: req.body });
-    // Eliminamos el pdf.
+    console.log(hash);
+    newUser.passwordResetToken = hash;
+    newUser.passwordResetExpires = Date.now() + 3600000 * 24; // Expira en 24h
+    const user = await User.create(newUser);
 
-    //opcion 2
-    //crea un ruta para pdf
-    // servidor remoto.
-    // url y filename
-    User.update(url);
+    const email = {
+      to: user.email,
+      subject: 'Activate your account',
+      template_id: 'd-7f1ed07a54f24fc1aa0cec826b1aa79b',
+      dynamic_template_data: {
+        firstName: user.firstName,
+        url: `http://localhost:3000/activate/${user.passwordResetToken}`,
+      },
+    };
 
-    //enviamos el correo
+    sendEmail(email);
+
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json(err);
