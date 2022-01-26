@@ -14,6 +14,11 @@ async function findOneUser(query) {
   return user;
 } // { key: value }
 
+async function updateUser(id, user) {
+  const updateUser = await User.findByIdAndUpdate(id, user, { new: true });
+  return updateUser;
+}
+
 // async function updateHash(query) {
 //   const user = getUserByEmail(query)
 //   console.log('entro aqui');
@@ -46,4 +51,5 @@ async function findOneUser(query) {
 module.exports = {
   getUserByEmail,
   findOneUser,
+  updateUser,
 };

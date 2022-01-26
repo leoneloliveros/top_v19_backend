@@ -15,6 +15,7 @@ function signToken(payload) {
 function isAuthenticated(req, res, next) {
   return compose().use(async (req, res, next) => {
     const authHeader = req.headers?.authorization; //Bearer 1212155121562
+    console.log('LLego aqui', authHeader);
     if (!authHeader) {
       return res.status(401).json({
         message: 'Unauthorized',
@@ -33,8 +34,9 @@ function isAuthenticated(req, res, next) {
     }
 
     //Attach user to request
+    console.log('LLego aqui, antes de user');
     const user = await getUserByEmail(payload.email);
-
+    console.log('LLego aqui, despues de user', user);
     if (!user) {
       return res.status(401).json({
         message: 'Unauthorized',
