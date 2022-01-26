@@ -1,38 +1,44 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const CreditCardSchema = new mongoose.Schema({
-  expMonth: {
-    type: String,
-    require: true,
-    trim: true,
+const CreditCardSchema = new mongoose.Schema(
+  {
+    expMonth: {
+      type: String,
+      require: true,
+      trim: true,
+    },
+    expYear: {
+      type: String,
+      require: true,
+      trim: true,
+    },
+    name: {
+      type: String,
+      require: true,
+      trim: true,
+    },
+    mask: {
+      type: String,
+      require: true,
+      trim: true,
+    },
+    tokenId: {
+      type: String,
+      require: true,
+      trim: true,
+    },
   },
-  expYear: {
-    type: String,
-    require: true,
-    trim: true,
-  },
-  name: {
-    type: String,
-    require: true,
-    trim: true,
-  },
-  mask: {
-    type: String,
-    require: true,
-    trim: true,
-  },
-  tokenId: {
-    type: String,
-    require: true,
-    trim: true,
-  },
-});
+  { _id: false },
+);
 
-const BillingSchema = new mongoose.Schema({
-  creditCards: [CreditCardSchema],
-  customerId: String, //[{platform: 'epayco', id: ''}, {platform: 'paypal', id: ''}]
-});
+const BillingSchema = new mongoose.Schema(
+  {
+    creditCards: [CreditCardSchema],
+    customerId: String, //[{platform: 'epayco', id: ''}, {platform: 'paypal', id: ''}]
+  },
+  { _id: false },
+);
 
 const UserSchema = mongoose.Schema(
   {

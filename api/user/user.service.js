@@ -1,4 +1,5 @@
 const User = require('./user.model');
+const get = require('lodash/get');
 
 async function getUserByEmail(email) {
   try {
@@ -16,6 +17,21 @@ async function findOneUser(query) {
 
 async function updateUser(id, user) {
   const updateUser = await User.findByIdAndUpdate(id, user, { new: true });
+  return updateUser;
+}
+
+async function addBillingCustomerId(user, customerId) {
+  const creditCards = get(user, 'billing.creditCards', []);
+
+  const customer = {
+    billing: {
+      creditCards,
+      customerId,
+    },
+  };
+  const updateUser = await User.findByIdAndUpdate(user._id, customer, {
+    new: true,
+  });
   return updateUser;
 }
 
@@ -52,4 +68,5 @@ module.exports = {
   getUserByEmail,
   findOneUser,
   updateUser,
+  addBillingCustomerId,
 };
