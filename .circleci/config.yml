@@ -30,11 +30,7 @@ workflows:
   heroku_deploy:
     jobs:
       - build
-      - 'test1':
-        requires:
-          - build
-        filters:
-          branches:
-            only: main
+      - test1
+
 
 
