@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  heroku: circleci/heroku@1.2.6
+
 jobs:
   build:
     docker:
@@ -13,24 +16,14 @@ jobs:
       - run:
           name: Corriendo el lint para probar el proyecto
           command: npm run lint
-  test1:
-    docker:
-      - image: circleci/node
-    working_directory: ~/project
-    steps:
-      - checkout
-      - run:
-          name: Instalando dependencias para llevar a produccion
-          command: npm install
-      - run:
-          name: Probando conexion a correos
-          command: npm run sendEmail
 
 workflows:
   heroku_deploy:
     jobs:
       - build
-      - test1
-
-
-
+      - heroku/deploy-via-git:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
