@@ -16,6 +16,18 @@ jobs:
       - run:
           name: Corriendo el lint para probar el proyecto
           command: npm run lint
+  build:
+    docker:
+      - image: circleci/node
+    working_directory: ~/project
+    steps:
+      - checkout
+      - run:
+          name: Instalando dependencias para llevar a produccion
+          command: npm install
+      - run:
+          name: Corriendo el lint para probar el proyecto
+          command: npm run lint
 
 workflows:
   heroku_deploy:
